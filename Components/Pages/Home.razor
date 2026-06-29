@@ -1,0 +1,110 @@
+@page "/"
+@attribute [AllowAnonymous]
+@inject SerwisRezerwacji Rezerwacje
+
+<PageTitle>Fryzjer Booking</PageTitle>
+
+<section class="hero">
+    <div>
+        <p class="eyebrow">Rezerwacje online</p>
+        <h1>Umów wizytę u fryzjera</h1>
+        <p class="lead">Wybierz usługę, fryzjera i dogodny termin. Konto pozwala zarządzać swoimi wizytami w jednym miejscu.</p>
+        <div class="hero-actions">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="button primary" href="/rezerwacja">Zarezerwuj wizytę</a>
+                    <a class="button secondary" href="/moje-wizyty">Moje wizyty</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="button primary" href="/konto/rejestracja">Załóż konto</a>
+                    <a class="button secondary" href="/konto/logowanie">Zaloguj</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+        <div class="hero-stats" aria-label="Informacje o salonie">
+            <div class="hero-stat">
+                <strong>30 min</strong>
+                <span>odstęp między terminami</span>
+            </div>
+            <div class="hero-stat">
+                <strong>3</strong>
+                <span>aktywnych fryzjerów</span>
+            </div>
+            <div class="hero-stat">
+                <strong>Online</strong>
+                <span>rezerwacja bez telefonu</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <span>Dziś</span>
+        <strong>9:00 - 17:00</strong>
+        <small>Rezerwacje co 30 minut</small>
+        <div class="schedule-row">
+            <span>Sobota</span>
+            <span>10:00 - 14:00</span>
+        </div>
+    </div>
+</section>
+
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Oferta</p>
+        <h2>Usługi</h2>
+    </div>
+    <p class="section-note">Najpopularniejsze usługi dostępne w systemie rezerwacji.</p>
+</section>
+
+<div class="service-grid">
+    @foreach (var service in services)
+    {
+        <article class="service-card">
+            <div>
+                <h3>@service.Nazwa</h3>
+                <p>@service.Opis</p>
+            </div>
+            <footer>
+                <span>@service.CzasTrwaniaMinuty min</span>
+                <strong>@service.Cena.ToString("C")</strong>
+            </footer>
+        </article>
+    }
+</div>
+
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Zespół</p>
+        <h2>Fryzjerzy</h2>
+    </div>
+    <p class="section-note">Wybierz osobę, do której chcesz zapisać wizytę.</p>
+</section>
+
+<div class="barber-grid">
+    @foreach (var barber in barbers)
+    {
+        <article class="barber-card">
+            <div class="avatar">@PobierzInicjaly(barber.ImieINazwisko)</div>
+            <div>
+                <h3>@barber.ImieINazwisko</h3>
+                <p>@barber.Opis</p>
+            </div>
+        </article>
+    }
+</div>
+
+@code {
+    private IReadOnlyList<UslugaFryzjerska> services = [];
+    private IReadOnlyList<Fryzjer> barbers = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        services = await Rezerwacje.PobierzAktywneUslugiAsync();
+        barbers = await Rezerwacje.PobierzAktywnychFryzjerowAsync();
+    }
+
+    private static string PobierzInicjaly(string imieINazwisko)
+    {
+        var czesci = imieINazwisko.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return string.Concat(czesci.Take(2).Select(czesc => czesc[0])).ToUpperInvariant();
+    }
+}

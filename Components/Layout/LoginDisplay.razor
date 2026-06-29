@@ -1,0 +1,16 @@
+<AuthorizeView>
+    <Authorized>
+        <div class="account-actions">
+            <span class="account-name">@context.User.Identity?.Name</span>
+            <form method="post" action="/konto/wyloguj">
+                <button class="button subtle" type="submit">Wyloguj</button>
+            </form>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="account-actions">
+            <a class="button subtle" href="/konto/logowanie">Logowanie</a>
+            <a class="button primary" href="/konto/rejestracja">Rejestracja</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

@@ -1,0 +1,47 @@
+@page "/konto/rejestracja"
+@model FryzjerBooking.Pages.Account.RegisterModel
+
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<div class="auth-page">
+    <form method="post" class="auth-card">
+        <p class="eyebrow">Konto klienta</p>
+        <h1>Rejestracja</h1>
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <label>
+            Imię i nazwisko
+            <input asp-for="Input.ImieINazwisko" autocomplete="name" />
+            <span asp-validation-for="Input.ImieINazwisko"></span>
+        </label>
+
+        <label>
+            E-mail
+            <input asp-for="Input.Email" autocomplete="email" />
+            <span asp-validation-for="Input.Email"></span>
+        </label>
+
+        <label>
+            Telefon
+            <input asp-for="Input.Telefon" autocomplete="tel" />
+            <span asp-validation-for="Input.Telefon"></span>
+        </label>
+
+        <label>
+            Hasło
+            <input asp-for="Input.Haslo" autocomplete="new-password" />
+            <span asp-validation-for="Input.Haslo"></span>
+        </label>
+
+        <label>
+            Powtórz hasło
+            <input asp-for="Input.PotwierdzHaslo" autocomplete="new-password" />
+            <span asp-validation-for="Input.PotwierdzHaslo"></span>
+        </label>
+
+        <button class="button primary wide" type="submit">Utwórz konto</button>
+        <a href="/konto/logowanie">Mam już konto</a>
+    </form>
+</div>

@@ -1,0 +1,170 @@
+@page "/rezerwacja"
+@attribute [Authorize]
+@inject SerwisRezerwacji Rezerwacje
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+
+<PageTitle>Rezerwacja wizyty</PageTitle>
+
+<section class="page-header">
+    <p class="eyebrow">Nowa rezerwacja</p>
+    <h1>Wybierz termin</h1>
+</section>
+
+<EditForm Model="@formularz" OnValidSubmit="@ZapiszAsync" class="form-layout">
+    <DataAnnotationsValidator />
+
+    <div class="form-card">
+        <label>
+            Usługa
+            <InputSelect @bind-Value="formularz.UslugaId">
+                <option value="0">Wybierz usługę</option>
+                @foreach (var service in services)
+                {
+                    <option value="@service.Id">@service.Nazwa - @service.Cena.ToString("C")</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => formularz.UslugaId)" />
+        </label>
+
+        <label>
+            Fryzjer
+            <InputSelect @bind-Value="formularz.FryzjerId">
+                <option value="0">Wybierz fryzjera</option>
+                @foreach (var barber in barbers)
+                {
+                    <option value="@barber.Id">@barber.ImieINazwisko</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => formularz.FryzjerId)" />
+        </label>
+
+        <label>
+            Data
+            <InputDate @bind-Value="formularz.Data" />
+            <ValidationMessage For="@(() => formularz.Data)" />
+        </label>
+
+        <button class="button secondary" type="button" @onclick="ZaladujTerminyAsync">Pokaż dostępne godziny</button>
+    </div>
+
+    <div class="form-card">
+        <h2>Dostępne godziny</h2>
+        @if (!string.IsNullOrWhiteSpace(message))
+        {
+            <div class="alert">@message</div>
+        }
+
+        @if (slots.Count == 0)
+        {
+            <p class="muted">Wybierz usługę, fryzjera i datę.</p>
+        }
+        else
+        {
+            <div class="slot-grid">
+                @foreach (var slot in slots)
+                {
+                    <button type="button"
+                            class="slot @(formularz.RozpoczynaSie == slot ? "selected" : null)"
+                            @onclick="() => formularz.RozpoczynaSie = slot">
+                        @slot.ToString("HH:mm")
+                    </button>
+                }
+            </div>
+        }
+
+        <label>
+            Notatka
+            <InputTextArea @bind-Value="formularz.Notatka" rows="4" />
+        </label>
+
+        <ValidationSummary />
+        <button class="button primary wide" type="submit" disabled="@isSubmitting">Zarezerwuj</button>
+    </div>
+</EditForm>
+
+@code {
+    private readonly FormularzRezerwacji formularz = new();
+    private IReadOnlyList<UslugaFryzjerska> services = [];
+    private IReadOnlyList<Fryzjer> barbers = [];
+    private IReadOnlyList<DateTimeOffset> slots = [];
+    private string? message;
+    private bool isSubmitting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        services = await Rezerwacje.PobierzAktywneUslugiAsync();
+        barbers = await Rezerwacje.PobierzAktywnychFryzjerowAsync();
+    }
+
+    private async Task ZaladujTerminyAsync()
+    {
+        message = null;
+        formularz.RozpoczynaSie = null;
+
+        if (formularz.UslugaId <= 0 || formularz.FryzjerId <= 0)
+        {
+            message = "Najpierw wybierz usługę i fryzjera.";
+            return;
+        }
+
+        slots = await Rezerwacje.PobierzDostepneTerminyAsync(formularz.FryzjerId, formularz.UslugaId, formularz.Data);
+        if (slots.Count == 0)
+        {
+            message = "Brak wolnych terminów w wybranym dniu.";
+        }
+    }
+
+    private async Task ZapiszAsync()
+    {
+        if (formularz.RozpoczynaSie is null)
+        {
+            message = "Wybierz godzinę wizyty.";
+            return;
+        }
+
+        isSubmitting = true;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            Navigation.NavigateTo("/konto/logowanie", forceLoad: true);
+            return;
+        }
+
+        var result = await Rezerwacje.ZarezerwujAsync(
+            userId,
+            formularz.FryzjerId,
+            formularz.UslugaId,
+            formularz.RozpoczynaSie.Value,
+            formularz.Notatka);
+
+        isSubmitting = false;
+
+        if (!result.Powodzenie)
+        {
+            message = result.Blad;
+            return;
+        }
+
+        Navigation.NavigateTo("/moje-wizyty");
+    }
+
+    private sealed class FormularzRezerwacji
+    {
+        [Range(1, int.MaxValue, ErrorMessage = "Wybierz usługę.")]
+        public int UslugaId { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Wybierz fryzjera.")]
+        public int FryzjerId { get; set; }
+
+        [Required]
+        public DateOnly Data { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
+
+        public DateTimeOffset? RozpoczynaSie { get; set; }
+
+        [StringLength(500)]
+        public string? Notatka { get; set; }
+    }
+}

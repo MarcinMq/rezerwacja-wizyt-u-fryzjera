@@ -1,0 +1,10 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+.dotnet-cli-home/
+barber-booking.db
+barber-booking.db-*
+appsettings.Local.json

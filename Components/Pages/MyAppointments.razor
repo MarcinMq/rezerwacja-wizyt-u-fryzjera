@@ -1,0 +1,93 @@
+@page "/moje-wizyty"
+@attribute [Authorize]
+@inject SerwisRezerwacji Rezerwacje
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Moje wizyty</PageTitle>
+
+<section class="page-header">
+    <p class="eyebrow">Konto</p>
+    <h1>Moje wizyty</h1>
+</section>
+
+@if (!string.IsNullOrWhiteSpace(message))
+{
+    <div class="alert">@message</div>
+}
+
+@if (appointments.Count == 0)
+{
+    <section class="empty-state">
+        <h2>Nie masz jeszcze wizyt</h2>
+        <a class="button primary" href="/rezerwacja">Zarezerwuj wizytę</a>
+    </section>
+}
+else
+{
+    <div class="appointments-list">
+        @foreach (var appointment in appointments)
+        {
+            <article class="appointment-card">
+                <div>
+                    <h2>@appointment.Usluga.Nazwa</h2>
+                    <p>@appointment.Fryzjer.ImieINazwisko</p>
+                </div>
+                <div>
+                    <strong>@appointment.RozpoczynaSie.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</strong>
+                    <span class="status">@PobierzTekstStatusu(appointment.Status)</span>
+                </div>
+                @if ((appointment.Status is StatusWizyty.Oczekujaca or StatusWizyty.Potwierdzona)
+                    && appointment.RozpoczynaSie > DateTimeOffset.UtcNow)
+                {
+                    <button class="button subtle" @onclick="() => OdwolajAsync(appointment.Id)">Odwołaj</button>
+                }
+            </article>
+        }
+    </div>
+}
+
+@code {
+    private IReadOnlyList<Wizyta> appointments = [];
+    private string? message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ZaladujAsync();
+    }
+
+    private async Task ZaladujAsync()
+    {
+        var userId = await PobierzIdUzytkownikaAsync();
+        appointments = string.IsNullOrWhiteSpace(userId)
+            ? []
+            : await Rezerwacje.PobierzWizytyUzytkownikaAsync(userId);
+    }
+
+    private async Task OdwolajAsync(int appointmentId)
+    {
+        var userId = await PobierzIdUzytkownikaAsync();
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return;
+        }
+
+        var result = await Rezerwacje.OdwolajAsync(userId, appointmentId);
+        message = result.Powodzenie ? "Wizyta została odwołana." : result.Blad;
+        await ZaladujAsync();
+    }
+
+    private async Task<string?> PobierzIdUzytkownikaAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        return authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    }
+
+    private static string PobierzTekstStatusu(StatusWizyty status) => status switch
+    {
+        StatusWizyty.Oczekujaca => "Oczekuje",
+        StatusWizyty.Potwierdzona => "Potwierdzona",
+        StatusWizyty.Odwolana => "Odwołana",
+        StatusWizyty.Zakonczona => "Zakończona",
+        _ => status.ToString()
+    };
+}

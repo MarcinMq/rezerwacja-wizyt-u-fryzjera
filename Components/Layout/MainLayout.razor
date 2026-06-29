@@ -1,0 +1,26 @@
+@inherits LayoutComponentBase
+
+<div class="page-shell">
+    <header class="topbar">
+        <a class="brand" href="/">
+            <span class="brand-mark">BB</span>
+            <span>Fryzjer Booking</span>
+        </a>
+
+        <nav class="nav-links">
+            <NavLink href="/" Match="NavLinkMatch.All">Usługi</NavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink href="/rezerwacja">Rezerwuj</NavLink>
+                    <NavLink href="/moje-wizyty">Moje wizyty</NavLink>
+                </Authorized>
+            </AuthorizeView>
+        </nav>
+
+        <LoginDisplay />
+    </header>
+
+    <main class="content">
+        @Body
+    </main>
+</div>
