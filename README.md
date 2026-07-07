@@ -216,28 +216,6 @@ curl -X POST "http://127.0.0.1:5107/api/wizyty" \
 | `wwwroot/css/app.css` | Wygląd aplikacji |
 | `wwwroot/js/site.js` | Animacje scrolla i parallax |
 
-## Dlaczego Nie Ma Folderu Controllers?
-
-Projekt używa Minimal API zamiast klasycznych kontrolerów MVC. Dlatego endpointy są w folderze:
-
-```text
-PunktyKoncowe/
-```
-
-To celowy wybór: aplikacja jest mniejsza, prostsza i nadal ma czytelnie rozdzielone endpointy.
-
-## Polskie Nazwy w Kodzie
-
-Modele, serwisy i metody domenowe mają polskie nazwy bez polskich znaków, na przykład:
-
-- `UslugaFryzjerska`
-- `SerwisRezerwacji`
-- `PobierzDostepneTerminyAsync`
-- `ZarezerwujAsync`
-- `OdwolajAsync`
-
-Nazwy frameworkowe Identity i ASP.NET Core pozostają tam, gdzie wymaga tego platforma.
-
 ## Build
 
 ```bash
