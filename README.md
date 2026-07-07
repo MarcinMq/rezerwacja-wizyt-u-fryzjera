@@ -7,7 +7,19 @@ System rezerwacji wizyt dla barber shopu z panelem klienta, logowaniem, dostępn
 ![Identity](https://img.shields.io/badge/Auth-ASP.NET%20Identity-2E7D67?style=for-the-badge)
 ![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
-![Podglad interfejsu](wwwroot/images/barber-shop-hero-straight.png)
+## Zrzuty Ekranu
+
+### Strona Główna
+
+![Strona główna aplikacji Fryzjer Booking](docs/screenshots/strona-glowna.jpg)
+
+### Rezerwacja Wizyty
+
+![Formularz rezerwacji wizyty z dostępnymi godzinami](docs/screenshots/rezerwacja.jpg)
+
+### Moje Wizyty
+
+![Panel moje wizyty z aktywną rezerwacją](docs/screenshots/moje-wizyty.jpg)
 
 ## O Projekcie
 
