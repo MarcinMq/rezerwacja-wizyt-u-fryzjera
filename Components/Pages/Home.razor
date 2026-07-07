@@ -2,13 +2,13 @@
 @attribute [AllowAnonymous]
 @inject SerwisRezerwacji Rezerwacje
 
-<PageTitle>Fryzjer Booking</PageTitle>
+<PageTitle>Fryzjer Booking | Rezerwacje barber shop</PageTitle>
 
-<section class="hero">
-    <div>
-        <p class="eyebrow">Rezerwacje online</p>
-        <h1>Umów wizytę u fryzjera</h1>
-        <p class="lead">Wybierz usługę, fryzjera i dogodny termin. Konto pozwala zarządzać swoimi wizytami w jednym miejscu.</p>
+<section class="hero reveal-on-scroll" data-reveal data-scroll-motion>
+    <div class="hero-copy">
+        <p class="eyebrow">Barber shop · rezerwacje online</p>
+        <h1>Umów cięcie bez telefonu</h1>
+        <p class="lead">Wybierz usługę, fryzjera i wolny termin. Wszystkie rezerwacje masz pod ręką, a salon działa bez chaosu w kalendarzu.</p>
         <div class="hero-actions">
             <AuthorizeView>
                 <Authorized>
@@ -37,17 +37,66 @@
         </div>
     </div>
     <div class="hero-panel">
-        <span>Dziś</span>
-        <strong>9:00 - 17:00</strong>
-        <small>Rezerwacje co 30 minut</small>
+        <span>Najbliższe terminy</span>
+        <strong>Dziś</strong>
+        <small>9:00 - 17:00 · rezerwacje co 30 minut</small>
         <div class="schedule-row">
             <span>Sobota</span>
             <span>10:00 - 14:00</span>
         </div>
+        <a class="panel-link" href="/rezerwacja">Sprawdź dostępność</a>
     </div>
 </section>
 
-<section class="section-heading">
+<section class="visual-strip" aria-label="Standard salonu">
+    <article class="feature-card reveal-on-scroll" data-reveal>
+        <span class="feature-number">01</span>
+        <h2>Precyzyjne cięcie</h2>
+        <p>Klasyka, fade, broda i szybkie poprawki w terminach dopasowanych do dnia.</p>
+    </article>
+    <article class="feature-card image-feature reveal-on-scroll" data-reveal data-scroll-motion>
+        <img src="/images/barber-tools-flatlay.png" alt="Narzędzia fryzjerskie ułożone równo na blacie barber shopu" />
+    </article>
+    <article class="feature-card reveal-on-scroll" data-reveal>
+        <span class="feature-number">02</span>
+        <h2>Wygodna rezerwacja</h2>
+        <p>Wybierasz usługę, fryzjera i godzinę bez dzwonienia oraz czekania na potwierdzenie.</p>
+    </article>
+</section>
+
+<section class="motion-showcase reveal-on-scroll" data-reveal data-scroll-motion aria-label="Przebieg wizyty">
+    <div class="motion-copy">
+        <p class="eyebrow">Rytm salonu</p>
+        <h2>Od wyboru usługi do fotela</h2>
+        <p>Strona prowadzi klienta przez prostą ścieżkę: usługa, termin, potwierdzenie. Salon ma porządek w kalendarzu, a klient wie, kiedy przyjść.</p>
+    </div>
+    <div class="motion-board">
+        <div class="barber-pole-line" aria-hidden="true"></div>
+        <div class="motion-step">
+            <span>01</span>
+            <div>
+                <strong>Wybór usługi</strong>
+                <small>Cięcie, broda albo pełny pakiet</small>
+            </div>
+        </div>
+        <div class="motion-step">
+            <span>02</span>
+            <div>
+                <strong>Wolna godzina</strong>
+                <small>Terminy rozpisane co 30 minut</small>
+            </div>
+        </div>
+        <div class="motion-step">
+            <span>03</span>
+            <div>
+                <strong>Gotowa rezerwacja</strong>
+                <small>Wizyta trafia do listy klienta</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-heading reveal-on-scroll" id="uslugi" data-reveal>
     <div>
         <p class="eyebrow">Oferta</p>
         <h2>Usługi</h2>
@@ -58,20 +107,21 @@
 <div class="service-grid">
     @foreach (var service in services)
     {
-        <article class="service-card">
+        <article class="service-card reveal-on-scroll" data-reveal>
+            <span class="service-badge">@service.CzasTrwaniaMinuty min</span>
             <div>
                 <h3>@service.Nazwa</h3>
                 <p>@service.Opis</p>
             </div>
             <footer>
-                <span>@service.CzasTrwaniaMinuty min</span>
+                <span>Dostępne online</span>
                 <strong>@service.Cena.ToString("C")</strong>
             </footer>
         </article>
     }
 </div>
 
-<section class="section-heading">
+<section class="section-heading reveal-on-scroll" id="fryzjerzy" data-reveal>
     <div>
         <p class="eyebrow">Zespół</p>
         <h2>Fryzjerzy</h2>
@@ -82,7 +132,7 @@
 <div class="barber-grid">
     @foreach (var barber in barbers)
     {
-        <article class="barber-card">
+        <article class="barber-card reveal-on-scroll" data-reveal>
             <div class="avatar">@PobierzInicjaly(barber.ImieINazwisko)</div>
             <div>
                 <h3>@barber.ImieINazwisko</h3>

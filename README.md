@@ -1,57 +1,78 @@
 # Fryzjer Booking
 
-Nowoczesna aplikacja webowa do rezerwacji wizyt u fryzjera. Projekt łączy backend ASP.NET Core, interfejs Blazor Server, logowanie przez ASP.NET Core Identity oraz lokalną bazę SQLite.
+System rezerwacji wizyt dla barber shopu z panelem klienta, logowaniem, dostępnością terminów i nowoczesnym interfejsem w Blazorze.
 
 ![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![Blazor](https://img.shields.io/badge/Blazor-Server-6D429C?style=for-the-badge&logo=blazor&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Identity](https://img.shields.io/badge/Auth-ASP.NET%20Identity-2E7D67?style=for-the-badge)
+![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
-## Opis
+![Podglad interfejsu](wwwroot/images/barber-shop-hero-straight.png)
 
-Fryzjer Booking pozwala klientowi założyć konto, zalogować się, wybrać usługę, fryzjera oraz wolny termin wizyty. Aplikacja pilnuje kolizji terminów, pokazuje listę wizyt zalogowanego klienta i pozwala odwołać przyszłą wizytę.
+## O Projekcie
 
-Kod aplikacji został częściowo nazwany po polsku, między innymi modele, serwisy i endpointy API. Tam, gdzie wymaga tego .NET lub Identity, pozostają nazwy frameworkowe po angielsku.
+Fryzjer Booking to aplikacja webowa do obsługi rezerwacji w salonie fryzjerskim lub barber shopie. Klient może założyć konto, wybrać usługę, fryzjera oraz wolny termin, a potem zarządzać swoimi wizytami w widoku „Moje wizyty”.
 
-## Funkcje
+Projekt ma pełny backend w ASP.NET Core, interfejs w Blazor Server, uwierzytelnianie przez ASP.NET Core Identity, bazę SQLite oraz polskie endpointy API. Kod domenowy jest nazwany po polsku, dzięki czemu projekt jest czytelny jako aplikacja biznesowa, a nie tylko techniczne demo.
 
-- rejestracja i logowanie klientów,
-- uwierzytelnianie przez ASP.NET Core Identity,
-- lista usług fryzjerskich,
-- lista aktywnych fryzjerów,
-- wybór dnia i dostępnej godziny wizyty,
-- blokowanie zajętych terminów,
-- widok „Moje wizyty” dla zalogowanego użytkownika,
-- odwoływanie przyszłych wizyt,
-- polskie endpointy API pod `/api`,
-- lokalna baza SQLite tworzona automatycznie przy starcie.
+## Najważniejsze Funkcje
+
+- Rejestracja i logowanie użytkowników.
+- Bezpieczne uwierzytelnianie przez ASP.NET Core Identity.
+- Lista usług fryzjerskich z ceną i czasem trwania.
+- Lista aktywnych fryzjerów.
+- Wybór daty oraz dostępnych godzin wizyty.
+- Blokowanie kolizji terminów.
+- Widok „Moje wizyty” dla zalogowanego klienta.
+- Odwoływanie przyszłych rezerwacji.
+- Minimal API z polskimi adresami endpointów.
+- Automatyczne utworzenie lokalnej bazy SQLite przy starcie.
+- Nowoczesny landing page z grafikami, animacją scrolla i płynnym paskiem barber pole.
+
+## UI i UX
+
+Strona główna została przygotowana pod klimat barber shopu:
+
+- mocna typografia w stylu szyldu salonu,
+- ciemna paleta z zielenią, drewnem, złotem i kremem,
+- lokalne grafiki w `wwwroot/images`,
+- animowane wejścia elementów podczas scrollowania,
+- subtelny parallax na wybranych sekcjach,
+- płynny pasek barber pole bez widocznego zacięcia na starcie,
+- responsywny układ na desktop i mobile.
+
+Warstwa animacji znajduje się w:
+
+```text
+wwwroot/js/site.js
+```
 
 ## Technologie
 
-- .NET 10
-- ASP.NET Core
-- Blazor Server
-- ASP.NET Core Identity
-- Entity Framework Core
-- SQLite
-- Razor Pages
-- Minimal API
+| Obszar | Technologia |
+| --- | --- |
+| Backend | ASP.NET Core |
+| Frontend | Blazor Server |
+| Logowanie | ASP.NET Core Identity |
+| Baza danych | SQLite |
+| ORM | Entity Framework Core |
+| Widoki konta | Razor Pages |
+| API | Minimal API |
+| Język | C# |
 
-## Wymagania
+## Szybki Start
 
-- .NET SDK 10.0 lub nowszy
-
-Sprawdzenie wersji:
+Wymagane jest SDK .NET 10 lub nowsze.
 
 ```bash
 dotnet --version
 ```
 
-## Uruchomienie
-
-Przejdź do folderu projektu:
+Sklonuj repozytorium:
 
 ```bash
-cd "/Users/marcinmq/Documents/Rezerwacja wizyt u fryzjera"
+git clone git@github.com:MarcinMq/rezerwacja-wizyt-u-fryzjera.git
+cd "rezerwacja-wizyt-u-fryzjera"
 ```
 
 Przywróć paczki i uruchom aplikację:
@@ -61,34 +82,39 @@ dotnet restore
 dotnet run
 ```
 
-Domyślne adresy z profilu startowego:
-
-- `https://localhost:7246`
-- `http://localhost:5246`
-
-Możesz też wymusić lokalny adres HTTP:
+Możesz też wymusić konkretny adres lokalny:
 
 ```bash
 dotnet run --no-launch-profile --urls http://127.0.0.1:5107
 ```
 
-Po pierwszym starcie aplikacja utworzy plik bazy:
+Po starcie otwórz:
+
+```text
+http://127.0.0.1:5107
+```
+
+Przy pierwszym uruchomieniu aplikacja utworzy lokalną bazę:
 
 ```text
 barber-booking.db
 ```
 
-Baza dostaje też przykładowe usługi i fryzjerów.
+Baza dostaje przykładowe usługi i fryzjerów z seedingu.
 
-## Konto użytkownika
+## Konto Testowe
 
-Aplikacja nie ma domyślnego konta administratora ani klienta. Konto należy założyć przez stronę:
+Projekt nie tworzy domyślnego konta użytkownika. Konto zakłada się z poziomu aplikacji:
 
 ```text
 /konto/rejestracja
 ```
 
-Hasło musi mieć co najmniej 8 znaków, małą literę i cyfrę.
+Wymagania hasła:
+
+- minimum 8 znaków,
+- co najmniej jedna mała litera,
+- co najmniej jedna cyfra.
 
 ## Endpointy API
 
@@ -112,13 +138,13 @@ Hasło musi mieć co najmniej 8 znaków, małą literę i cyfrę.
 | `POST` | `/api/wizyty` | Utworzenie rezerwacji |
 | `PATCH` | `/api/wizyty/{wizytaId}/odwolaj` | Odwołanie wizyty |
 
-Przykład sprawdzenia dostępności:
+Przykład dostępności:
 
 ```bash
 curl "http://127.0.0.1:5107/api/dostepnosc?fryzjerId=1&uslugaId=1&data=2026-06-30"
 ```
 
-Przykład rejestracji przez API:
+Przykład rejestracji:
 
 ```bash
 curl -X POST "http://127.0.0.1:5107/api/konto/rejestracja" \
@@ -131,7 +157,7 @@ curl -X POST "http://127.0.0.1:5107/api/konto/rejestracja" \
   }'
 ```
 
-Przykład utworzenia wizyty:
+Przykład rezerwacji:
 
 ```bash
 curl -X POST "http://127.0.0.1:5107/api/wizyty" \
@@ -144,45 +170,61 @@ curl -X POST "http://127.0.0.1:5107/api/wizyty" \
   }'
 ```
 
-## Struktura projektu
+## Struktura Projektu
 
 ```text
 .
-├── Components/          # Widoki Blazor
-├── Data/                # Kontekst EF Core i dane startowe
-├── Models/              # Modele domenowe
-├── Pages/Account/       # Logowanie, rejestracja i wylogowanie
-├── PunktyKoncowe/       # Minimal API
-├── Services/            # Logika rezerwacji
-├── wwwroot/css/         # Style aplikacji
-├── Program.cs           # Konfiguracja aplikacji
-└── BarberBooking.csproj # Plik projektu .NET
+├── Components/              # Layout, routing i widoki Blazor
+│   └── Pages/               # Strona główna, rezerwacja, moje wizyty
+├── Data/                    # Kontekst EF Core i dane startowe
+├── Models/                  # Modele domenowe
+├── Pages/Account/           # Logowanie, rejestracja i wylogowanie
+├── PunktyKoncowe/           # Minimal API
+├── Services/                # Logika rezerwacji
+├── wwwroot/css/             # Style aplikacji
+├── wwwroot/images/          # Lokalne grafiki UI
+├── wwwroot/js/              # Animacje i efekty scrolla
+├── Program.cs               # Konfiguracja aplikacji
+└── BarberBooking.csproj     # Projekt .NET
 ```
 
-## Ważne pliki
+## Ważne Pliki
 
-- `Data/KontekstAplikacji.cs` - konfiguracja Entity Framework Core i mapowanie bazy,
-- `Services/SerwisRezerwacji.cs` - logika rezerwacji, dostępności i odwoływania wizyt,
-- `PunktyKoncowe/PunktyKoncoweRezerwacji.cs` - endpointy API dla usług, fryzjerów i wizyt,
-- `PunktyKoncowe/PunktyKoncoweKonta.cs` - endpointy API dla konta,
-- `Components/Pages/BookAppointment.razor` - formularz rezerwacji,
-- `Components/Pages/MyAppointments.razor` - widok wizyt użytkownika.
+| Plik | Rola |
+| --- | --- |
+| `Program.cs` | Konfiguracja ASP.NET Core, Identity, EF Core i routingu |
+| `Data/KontekstAplikacji.cs` | Mapowanie modeli do SQLite |
+| `Data/DaneStartowe.cs` | Seed usług i fryzjerów |
+| `Services/SerwisRezerwacji.cs` | Logika dostępności, rezerwacji i odwoływania wizyt |
+| `PunktyKoncowe/PunktyKoncoweKonta.cs` | API konta |
+| `PunktyKoncowe/PunktyKoncoweRezerwacji.cs` | API usług, fryzjerów i wizyt |
+| `Components/Pages/Home.razor` | Strona główna |
+| `Components/Pages/BookAppointment.razor` | Formularz rezerwacji |
+| `Components/Pages/MyAppointments.razor` | Lista wizyt użytkownika |
+| `wwwroot/css/app.css` | Wygląd aplikacji |
+| `wwwroot/js/site.js` | Animacje scrolla i parallax |
 
-## Uwagi developerskie
+## Dlaczego Nie Ma Folderu Controllers?
 
-Projekt używa Minimal API zamiast klasycznych kontrolerów MVC. Dlatego folder `Controllers` nie jest potrzebny. Endpointy znajdują się w folderze `PunktyKoncowe`.
-
-Modele i metody aplikacyjne mają polskie nazwy bez polskich znaków, np. `UslugaFryzjerska`, `SerwisRezerwacji`, `PobierzDostepneTerminyAsync`. To ułatwia pracę z narzędziami i zachowuje kompatybilność z C#.
-
-## Znane ostrzeżenie
-
-Podczas `restore` lub `build` może pojawić się ostrzeżenie NuGet dotyczące transytywnej paczki SQLite:
+Projekt używa Minimal API zamiast klasycznych kontrolerów MVC. Dlatego endpointy są w folderze:
 
 ```text
-NU1903: SQLitePCLRaw.lib.e_sqlite3 2.1.11
+PunktyKoncowe/
 ```
 
-Projekt mimo tego buduje się poprawnie.
+To celowy wybór: aplikacja jest mniejsza, prostsza i nadal ma czytelnie rozdzielone endpointy.
+
+## Polskie Nazwy w Kodzie
+
+Modele, serwisy i metody domenowe mają polskie nazwy bez polskich znaków, na przykład:
+
+- `UslugaFryzjerska`
+- `SerwisRezerwacji`
+- `PobierzDostepneTerminyAsync`
+- `ZarezerwujAsync`
+- `OdwolajAsync`
+
+Nazwy frameworkowe Identity i ASP.NET Core pozostają tam, gdzie wymaga tego platforma.
 
 ## Build
 
@@ -190,6 +232,23 @@ Projekt mimo tego buduje się poprawnie.
 dotnet build
 ```
 
+Znane ostrzeżenie:
+
+```text
+NU1903: SQLitePCLRaw.lib.e_sqlite3 2.1.11
+```
+
+To ostrzeżenie pochodzi z transytywnej paczki SQLite. Projekt mimo tego buduje się poprawnie.
+
 ## Status
 
-Projekt jest gotowy jako lokalna aplikacja demonstracyjna do rezerwacji wizyt u fryzjera.
+Projekt jest gotowy jako lokalna aplikacja demonstracyjna do rezerwacji wizyt u fryzjera. Ma działające konto użytkownika, rezerwacje, widok wizyt, API oraz dopracowaną stronę główną z dynamicznym UI.
+
+## Możliwe Rozszerzenia
+
+- Panel administratora do potwierdzania wizyt.
+- Role użytkowników: klient, fryzjer, administrator.
+- Edycja godzin pracy salonu z poziomu UI.
+- Powiadomienia e-mail po rezerwacji.
+- Migracje EF Core zamiast `EnsureCreated`.
+- Testy jednostkowe dla `SerwisRezerwacji`.

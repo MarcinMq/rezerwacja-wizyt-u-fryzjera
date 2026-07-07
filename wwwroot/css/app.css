@@ -1,7 +1,7 @@
 :root {
     color-scheme: light;
-    --bg: #f5f1ea;
-    --surface: #fffaf3;
+    --bg: #f4efe7;
+    --surface: #fff8ee;
     --panel: #ffffff;
     --ink: #171512;
     --muted: #6f675d;
@@ -13,6 +13,8 @@
     --gold: #c58c3d;
     --terracotta: #a85031;
     --danger: #a23535;
+    --font-heading: Impact, Haettenschweiler, "Arial Black", "Arial Narrow Bold", sans-serif;
+    --font-body: "Avenir Next", "Trebuchet MS", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --shadow: 0 22px 60px rgba(30, 24, 18, 0.13);
     --shadow-soft: 0 10px 30px rgba(30, 24, 18, 0.08);
 }
@@ -33,7 +35,7 @@ body {
         radial-gradient(circle at top left, rgba(23, 105, 94, 0.13), transparent 34%),
         var(--bg);
     color: var(--ink);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: var(--font-body);
 }
 
 a {
@@ -76,7 +78,14 @@ textarea {
 .brand {
     gap: 12px;
     text-decoration: none;
-    font-weight: 900;
+    font-weight: 400;
+}
+
+.brand span:last-child {
+    font-family: var(--font-heading);
+    font-size: 1.18rem;
+    font-weight: 400;
+    text-transform: uppercase;
 }
 
 .brand-mark {
@@ -88,6 +97,7 @@ textarea {
     background: var(--ink);
     color: #fff;
     box-shadow: inset 0 -8px 18px rgba(255, 255, 255, 0.08);
+    font-family: var(--font-heading);
     font-size: 0.8rem;
     letter-spacing: 0;
 }
@@ -103,8 +113,10 @@ textarea {
     padding: 9px 12px;
     border-radius: 8px;
     color: var(--muted);
+    font-family: var(--font-heading);
     text-decoration: none;
-    font-weight: 750;
+    font-weight: 400;
+    text-transform: uppercase;
 }
 
 .nav-links a.active,
@@ -134,22 +146,30 @@ textarea {
 
 .hero {
     position: relative;
+    isolation: isolate;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+    grid-template-columns: minmax(0, 0.95fr) minmax(300px, 390px);
     gap: clamp(24px, 5vw, 52px);
     overflow: hidden;
-    min-height: 470px;
-    align-items: stretch;
-    padding: clamp(28px, 5vw, 62px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    min-height: 500px;
+    align-items: center;
+    padding: clamp(26px, 5vw, 54px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     border-radius: 8px;
     background:
-        linear-gradient(120deg, rgba(23, 21, 18, 0.96), rgba(28, 38, 34, 0.9) 54%, rgba(23, 105, 94, 0.76)),
-        url("https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1600&q=80");
-    background-position: center;
+        linear-gradient(110deg, rgba(16, 15, 13, 0.96) 0%, rgba(22, 28, 25, 0.88) 43%, rgba(18, 70, 62, 0.48) 100%),
+        url("/images/barber-shop-hero-straight.png");
+    background-position:
+        center,
+        center calc(50% + var(--motion-shift, 0px));
     background-size: cover;
     color: #fff;
     box-shadow: var(--shadow);
+}
+
+.hero-panel {
+    transform: translateY(var(--motion-shift-small, 0px));
+    transition: transform 120ms linear;
 }
 
 .hero::after {
@@ -158,7 +178,7 @@ textarea {
     bottom: 0;
     width: min(46vw, 520px);
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08));
+    background: linear-gradient(90deg, transparent, rgba(255, 248, 238, 0.08));
     content: "";
     pointer-events: none;
 }
@@ -174,9 +194,24 @@ textarea {
 .empty-state h1 {
     margin: 0;
     max-width: 760px;
-    font-size: clamp(2.45rem, 6.2vw, 5.55rem);
+    font-family: var(--font-heading);
+    font-weight: 400;
     line-height: 0.96;
     letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    font-size: 4.85rem;
+}
+
+.page-header h1 {
+    font-size: 3.6rem;
+}
+
+.auth-card h1,
+.empty-state h1 {
+    font-size: 2.8rem;
 }
 
 .hero h1:focus,
@@ -187,7 +222,7 @@ textarea {
 }
 
 .lead {
-    max-width: 650px;
+    max-width: 610px;
     color: rgba(255, 250, 243, 0.82);
     font-size: 1.17rem;
     line-height: 1.7;
@@ -196,7 +231,7 @@ textarea {
 .hero-actions {
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 30px;
+    margin-top: 24px;
 }
 
 .hero-stats {
@@ -204,12 +239,12 @@ textarea {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
     max-width: 620px;
-    margin-top: 36px;
+    margin-top: 26px;
 }
 
 .hero-stat {
-    min-height: 90px;
-    padding: 16px;
+    min-height: 82px;
+    padding: 14px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.08);
@@ -230,13 +265,13 @@ textarea {
     display: grid;
     align-self: center;
     align-content: start;
-    gap: 12px;
-    padding: 24px;
+    gap: 14px;
+    padding: 26px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 8px;
-    background: rgba(255, 250, 243, 0.12);
+    background: linear-gradient(180deg, rgba(255, 250, 243, 0.18), rgba(23, 21, 18, 0.28));
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
 }
 
 .hero-panel span,
@@ -253,8 +288,11 @@ textarea {
 
 .hero-panel strong {
     color: #fff;
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-family: var(--font-heading);
+    font-size: 3.2rem;
+    font-weight: 700;
     line-height: 1;
+    text-transform: uppercase;
 }
 
 .hero-panel .schedule-row {
@@ -266,11 +304,250 @@ textarea {
     color: rgba(255, 250, 243, 0.82);
 }
 
+.panel-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    border-radius: 8px;
+    background: #f2b56d;
+    color: #24160d;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.visual-strip {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.3fr) minmax(0, 0.85fr);
+    gap: 18px;
+    margin: 22px 0 54px;
+}
+
+.feature-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 230px;
+    padding: 24px;
+    border: 1px solid rgba(221, 208, 191, 0.82);
+    border-radius: 8px;
+    background:
+        linear-gradient(180deg, rgba(255, 248, 238, 0.94), rgba(255, 255, 255, 0.9));
+    box-shadow: var(--shadow-soft);
+}
+
+.feature-card::after {
+    position: absolute;
+    right: -22px;
+    bottom: 18px;
+    width: 120px;
+    height: 2px;
+    background: var(--gold);
+    content: "";
+    transform: rotate(-38deg);
+}
+
+.feature-card h2 {
+    margin: 24px 0 10px;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.feature-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.feature-number {
+    color: var(--terracotta);
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.image-feature {
+    padding: 0;
+    background: #14110d;
+}
+
+.image-feature::after {
+    content: none;
+}
+
+.image-feature img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    transform: translateY(var(--motion-shift-inverse, 0px)) scale(1.04);
+    transition: transform 120ms linear;
+    will-change: transform;
+}
+
+.motion-showcase {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(320px, 1fr);
+    gap: clamp(22px, 5vw, 54px);
+    overflow: hidden;
+    align-items: center;
+    margin: 34px 0 54px;
+    padding: clamp(26px, 5vw, 52px);
+    border-radius: 8px;
+    background:
+        linear-gradient(135deg, rgba(15, 77, 70, 0.96), rgba(23, 21, 18, 0.98)),
+        url("/images/barber-shop-hero-straight.png");
+    background-position:
+        center,
+        center calc(50% + var(--motion-shift, 0px));
+    background-size: cover;
+    color: #fff;
+    box-shadow: var(--shadow);
+}
+
+.motion-showcase::before {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(23, 21, 18, 0.76), rgba(23, 21, 18, 0.2));
+    content: "";
+}
+
+.motion-showcase > * {
+    position: relative;
+    z-index: 1;
+}
+
+.motion-copy h2 {
+    margin: 0 0 16px;
+    max-width: 520px;
+    font-family: var(--font-heading);
+    font-size: 3.3rem;
+    font-weight: 400;
+    line-height: 0.98;
+    text-transform: uppercase;
+}
+
+.motion-copy p:not(.eyebrow) {
+    max-width: 560px;
+    margin: 0;
+    color: rgba(255, 250, 243, 0.78);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.motion-board {
+    display: grid;
+    gap: 12px;
+    padding: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    background: rgba(255, 250, 243, 0.12);
+    backdrop-filter: blur(10px);
+    transform: translateY(var(--motion-shift-small, 0px));
+    transition: transform 120ms linear;
+}
+
+.barber-pole-line {
+    position: relative;
+    overflow: hidden;
+    height: 12px;
+    margin-bottom: 10px;
+    border-radius: 999px;
+    background:
+        repeating-linear-gradient(110deg, #f8efe2 0 18px, #b03937 18px 36px, #f8efe2 36px 54px, #1f5f80 54px 72px);
+    background-size: 72px 100%;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+    transform: translateZ(0);
+    animation: barberPoleFlow 1.8s linear infinite;
+    animation-delay: -0.9s;
+    will-change: background-position;
+}
+
+.motion-step {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 14px;
+    align-items: center;
+    min-height: 74px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.motion-step span,
+.motion-step strong {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.motion-step span {
+    color: #f2b56d;
+    font-size: 1.5rem;
+}
+
+.motion-step strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.25rem;
+}
+
+.motion-step small {
+    color: rgba(255, 250, 243, 0.7);
+    line-height: 1.45;
+}
+
+.motion-ready .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+        opacity 520ms ease,
+        transform 520ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease;
+}
+
+.motion-ready .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.motion-ready .service-card.reveal-on-scroll:nth-child(2),
+.motion-ready .barber-card.reveal-on-scroll:nth-child(2),
+.motion-ready .visual-strip .reveal-on-scroll:nth-child(2) {
+    transition-delay: 80ms;
+}
+
+.motion-ready .service-card.reveal-on-scroll:nth-child(3),
+.motion-ready .barber-card.reveal-on-scroll:nth-child(3),
+.motion-ready .visual-strip .reveal-on-scroll:nth-child(3) {
+    transition-delay: 150ms;
+}
+
+@keyframes barberPoleFlow {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 72px 0;
+    }
+}
+
 .eyebrow {
     margin: 0 0 10px;
     color: var(--terracotta);
+    font-family: var(--font-heading);
     font-size: 0.76rem;
-    font-weight: 900;
+    font-weight: 400;
     letter-spacing: 0;
     text-transform: uppercase;
 }
@@ -296,7 +573,10 @@ textarea {
 }
 
 .section-heading h2 {
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-family: var(--font-heading);
+    font-size: 2.55rem;
+    line-height: 1;
+    text-transform: uppercase;
 }
 
 .section-note {
@@ -328,25 +608,51 @@ textarea {
 .service-card {
     position: relative;
     display: flex;
-    min-height: 220px;
+    min-height: 240px;
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
     padding: 24px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 248, 238, 0.92));
 }
 
 .service-card::before {
-    width: 46px;
-    height: 4px;
-    margin-bottom: 18px;
-    border-radius: 999px;
-    background: var(--gold);
+    position: absolute;
+    inset: 0 0 auto;
+    height: 6px;
+    background:
+        repeating-linear-gradient(90deg, var(--accent) 0 34px, var(--gold) 34px 50px, var(--terracotta) 50px 66px);
     content: "";
+}
+
+.service-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.service-badge {
+    display: inline-flex;
+    width: fit-content;
+    min-height: 34px;
+    align-items: center;
+    padding: 0 12px;
+    border: 1px solid rgba(23, 105, 94, 0.14);
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    text-transform: uppercase;
 }
 
 .service-card h3,
 .barber-card h3 {
     margin: 0 0 8px;
+    font-family: var(--font-heading);
+    font-size: 1.55rem;
+    line-height: 1.08;
+    text-transform: uppercase;
 }
 
 .service-card p,
@@ -381,6 +687,8 @@ textarea {
     min-height: 150px;
     align-items: start;
     padding: 20px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 248, 238, 0.9));
 }
 
 .avatar {
@@ -390,9 +698,10 @@ textarea {
     place-items: center;
     border: 1px solid rgba(23, 105, 94, 0.14);
     border-radius: 50%;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    font-weight: 950;
+    background: var(--ink);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 400;
 }
 
 .button {
@@ -405,8 +714,10 @@ textarea {
     border: 1px solid transparent;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 900;
+    font-family: var(--font-heading);
+    font-weight: 400;
     text-decoration: none;
+    text-transform: uppercase;
     transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, border-color 150ms ease;
 }
 
@@ -603,7 +914,6 @@ label span,
 
 .auth-card h1 {
     margin-bottom: 20px;
-    font-size: clamp(2rem, 4vw, 3rem);
 }
 
 .auth-card a {
@@ -626,6 +936,8 @@ label span,
     }
 
     .hero,
+    .visual-strip,
+    .motion-showcase,
     .form-layout,
     .appointment-card {
         grid-template-columns: 1fr;
@@ -641,14 +953,29 @@ label span,
         grid-template-columns: 1fr;
     }
 
+    .image-feature img {
+        min-height: 240px;
+    }
+
     .section-heading,
     .page-header {
         align-items: start;
         flex-direction: column;
     }
 
-    .hero h1,
-    .page-header h1,
+    .hero h1 {
+        font-size: 4rem;
+    }
+
+    .motion-copy h2 {
+        font-size: 2.8rem;
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+    }
+
+    .auth-card h1,
     .empty-state h1 {
         font-size: 2.45rem;
     }
@@ -661,6 +988,7 @@ label span,
     }
 
     .hero,
+    .motion-showcase,
     .form-card,
     .auth-card,
     .empty-state {
@@ -668,7 +996,71 @@ label span,
     }
 
     .hero h1 {
-        font-size: 2.28rem;
+        font-size: 3rem;
+    }
+
+    .lead {
+        font-size: 1.05rem;
+        line-height: 1.55;
+    }
+
+    .hero-actions {
+        margin-top: 20px;
+    }
+
+    .hero-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 18px;
+    }
+
+    .hero-stat {
+        min-height: 72px;
+        padding: 10px;
+    }
+
+    .hero-stat strong {
+        font-size: 1.05rem;
+    }
+
+    .hero-stat span {
+        font-size: 0.72rem;
+        line-height: 1.25;
+    }
+
+    .hero-panel {
+        display: none;
+    }
+
+    .page-header h1,
+    .section-heading h2 {
+        font-size: 2.35rem;
+    }
+
+    .hero-panel strong {
+        font-size: 2.65rem;
+    }
+
+    .visual-strip {
+        margin: 14px 0 38px;
+    }
+
+    .motion-showcase {
+        margin: 22px 0 38px;
+    }
+
+    .motion-copy h2 {
+        font-size: 2.35rem;
+    }
+
+    .motion-board {
+        padding: 16px;
+    }
+
+    .motion-step {
+        grid-template-columns: 40px 1fr;
+        min-height: 68px;
+        padding: 12px;
     }
 
     .brand span:last-child {
@@ -681,5 +1073,22 @@ label span,
 
     .account-actions .button {
         width: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .image-feature img,
+    .motion-board,
+    .hero-panel {
+        transform: none !important;
     }
 }
