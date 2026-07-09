@@ -11,7 +11,7 @@ System rezerwacji wizyt dla barber shopu z panelem klienta, logowaniem, dostępn
 
 ### Strona Główna
 
-![Strona główna aplikacji Fryzjer Booking](docs/screenshots/strona-glowna.jpg)
+![Strona główna aplikacji Fryzjer Booking z interaktywną sceną 3D](docs/screenshots/strona-glowna.jpg)
 
 ### Rezerwacja Wizyty
 
