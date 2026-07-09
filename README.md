@@ -189,6 +189,7 @@ curl -X POST "http://127.0.0.1:5107/api/wizyty" \
 ├── Components/              # Layout, routing i widoki Blazor
 │   └── Pages/               # Strona główna, rezerwacja, moje wizyty
 ├── Data/                    # Kontekst EF Core i dane startowe
+├── FryzjerBooking.Tests/     # Testy xUnit logiki rezerwacji
 ├── Models/                  # Modele domenowe
 ├── Pages/Account/           # Logowanie, rejestracja i wylogowanie
 ├── PunktyKoncowe/           # Minimal API
@@ -213,6 +214,7 @@ curl -X POST "http://127.0.0.1:5107/api/wizyty" \
 | `Components/Pages/Home.razor` | Strona główna |
 | `Components/Pages/BookAppointment.razor` | Formularz rezerwacji |
 | `Components/Pages/MyAppointments.razor` | Lista wizyt użytkownika |
+| `FryzjerBooking.Tests/SerwisRezerwacjiTests.cs` | Testy kolizji i równoległych rezerwacji |
 | `wwwroot/css/app.css` | Wygląd aplikacji |
 | `wwwroot/js/site.js` | Animacje scrolla i parallax |
 
@@ -220,6 +222,12 @@ curl -X POST "http://127.0.0.1:5107/api/wizyty" \
 
 ```bash
 dotnet build
+```
+
+## Testy
+
+```bash
+dotnet test FryzjerBooking.Tests/FryzjerBooking.Tests.csproj
 ```
 
 Znane ostrzeżenie:
@@ -241,4 +249,3 @@ Projekt jest gotowy jako lokalna aplikacja demonstracyjna do rezerwacji wizyt u 
 - Edycja godzin pracy salonu z poziomu UI.
 - Powiadomienia e-mail po rezerwacji.
 - Migracje EF Core zamiast `EnsureCreated`.
-- Testy jednostkowe dla `SerwisRezerwacji`.

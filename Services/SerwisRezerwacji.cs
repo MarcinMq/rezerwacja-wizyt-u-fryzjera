@@ -1,5 +1,6 @@
 using FryzjerBooking.Data;
 using FryzjerBooking.Models;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace FryzjerBooking.Services;
@@ -110,48 +111,82 @@ public sealed class SerwisRezerwacji(KontekstAplikacji db)
         DateTimeOffset rozpoczynaSie,
         string? notatka)
     {
-        var usluga = await db.UslugiFryzjerskie
-            .FirstOrDefaultAsync(item => item.Id == uslugaId && item.CzyAktywny);
+        await db.Database.OpenConnectionAsync();
+        SqliteTransaction? transakcja = null;
 
-        var fryzjerIstnieje = await db.Fryzjerzy
-            .AnyAsync(item => item.Id == fryzjerId && item.CzyAktywny);
-
-        if (usluga is null)
+        try
         {
-            return WynikOperacji.Niepowodzenie("Wybrana usługa nie istnieje.");
+            var polaczenie = db.Database.GetDbConnection() as SqliteConnection
+                ?? throw new InvalidOperationException("Rezerwacje wymagają połączenia SQLite.");
+
+            // BEGIN IMMEDIATE serializuje zapisy dla danego pliku SQLite przed sprawdzeniem dostępności.
+            transakcja = polaczenie.BeginTransaction(deferred: false);
+            db.Database.UseTransaction(transakcja);
+
+            var usluga = await db.UslugiFryzjerskie
+                .FirstOrDefaultAsync(item => item.Id == uslugaId && item.CzyAktywny);
+
+            var fryzjerIstnieje = await db.Fryzjerzy
+                .AnyAsync(item => item.Id == fryzjerId && item.CzyAktywny);
+
+            if (usluga is null)
+            {
+                return WynikOperacji.Niepowodzenie("Wybrana usługa nie istnieje.");
+            }
+
+            if (!fryzjerIstnieje)
+            {
+                return WynikOperacji.Niepowodzenie("Wybrany fryzjer nie istnieje.");
+            }
+
+            if (rozpoczynaSie <= DateTimeOffset.Now.AddMinutes(30))
+            {
+                return WynikOperacji.Niepowodzenie("Termin musi być zaplanowany z co najmniej 30-minutowym wyprzedzeniem.");
+            }
+
+            var data = DateOnly.FromDateTime(rozpoczynaSie.LocalDateTime);
+            var dostepneTerminy = await PobierzDostepneTerminyAsync(fryzjerId, uslugaId, data);
+            if (!dostepneTerminy.Any(termin => termin == rozpoczynaSie))
+            {
+                return WynikOperacji.Niepowodzenie("Ten termin nie jest już dostępny.");
+            }
+
+            var wizyta = new Wizyta
+            {
+                KlientId = uzytkownikId,
+                FryzjerId = fryzjerId,
+                UslugaId = uslugaId,
+                RozpoczynaSie = rozpoczynaSie.ToUniversalTime(),
+                KonczySie = rozpoczynaSie.AddMinutes(usluga.CzasTrwaniaMinuty).ToUniversalTime(),
+                Notatka = notatka?.Trim()
+            };
+
+            db.Wizyty.Add(wizyta);
+            await db.SaveChangesAsync();
+            await transakcja.CommitAsync();
+
+            return WynikOperacji.Sukces();
         }
-
-        if (!fryzjerIstnieje)
+        catch (SqliteException exception) when (exception.SqliteErrorCode is 5 or 6)
         {
-            return WynikOperacji.Niepowodzenie("Wybrany fryzjer nie istnieje.");
+            db.ChangeTracker.Clear();
+            return WynikOperacji.Niepowodzenie("Termin jest właśnie rezerwowany przez innego klienta. Wybierz inną godzinę.");
         }
-
-        if (rozpoczynaSie <= DateTimeOffset.Now.AddMinutes(30))
+        catch (DbUpdateException)
         {
-            return WynikOperacji.Niepowodzenie("Termin musi być zaplanowany z co najmniej 30-minutowym wyprzedzeniem.");
-        }
-
-        var data = DateOnly.FromDateTime(rozpoczynaSie.LocalDateTime);
-        var dostepneTerminy = await PobierzDostepneTerminyAsync(fryzjerId, uslugaId, data);
-        if (!dostepneTerminy.Any(termin => termin == rozpoczynaSie))
-        {
+            db.ChangeTracker.Clear();
             return WynikOperacji.Niepowodzenie("Ten termin nie jest już dostępny.");
         }
-
-        var wizyta = new Wizyta
+        finally
         {
-            KlientId = uzytkownikId,
-            FryzjerId = fryzjerId,
-            UslugaId = uslugaId,
-            RozpoczynaSie = rozpoczynaSie.ToUniversalTime(),
-            KonczySie = rozpoczynaSie.AddMinutes(usluga.CzasTrwaniaMinuty).ToUniversalTime(),
-            Notatka = notatka?.Trim()
-        };
+            db.Database.UseTransaction(null);
+            if (transakcja is not null)
+            {
+                await transakcja.DisposeAsync();
+            }
 
-        db.Wizyty.Add(wizyta);
-        await db.SaveChangesAsync();
-
-        return WynikOperacji.Sukces();
+            await db.Database.CloseConnectionAsync();
+        }
     }
 
     public async Task<WynikOperacji> OdwolajAsync(string uzytkownikId, int wizytaId)
