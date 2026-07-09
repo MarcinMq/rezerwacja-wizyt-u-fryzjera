@@ -39,7 +39,7 @@ Projekt ma pełny backend w ASP.NET Core, interfejs w Blazor Server, uwierzyteln
 - Odwoływanie przyszłych rezerwacji.
 - Minimal API z polskimi adresami endpointów.
 - Automatyczne utworzenie lokalnej bazy SQLite przy starcie.
-- Nowoczesny landing page z grafikami, animacją scrolla i płynnym paskiem barber pole.
+- Nowoczesny landing page z grafikami, animacją scrolla, sceną 3D Three.js oraz płynnym paskiem barber pole.
 
 ## UI i UX
 
@@ -48,6 +48,7 @@ Strona główna została przygotowana pod klimat barber shopu:
 - mocna typografia w stylu szyldu salonu,
 - ciemna paleta z zielenią, drewnem, złotem i kremem,
 - lokalne grafiki w `wwwroot/images`,
+- lokalna scena Three.js z nożyczkami, grzebieniem i animowanymi pasmami włosów,
 - animowane wejścia elementów podczas scrollowania,
 - subtelny parallax na wybranych sekcjach,
 - płynny pasek barber pole bez widocznego zacięcia na starcie,
@@ -64,7 +65,7 @@ wwwroot/js/site.js
 | Obszar | Technologia |
 | --- | --- |
 | Backend | ASP.NET Core |
-| Frontend | Blazor Server |
+| Frontend | Blazor Server + Three.js |
 | Logowanie | ASP.NET Core Identity |
 | Baza danych | SQLite |
 | ORM | Entity Framework Core |
@@ -197,6 +198,7 @@ curl -X POST "http://127.0.0.1:5107/api/wizyty" \
 ├── wwwroot/css/             # Style aplikacji
 ├── wwwroot/images/          # Lokalne grafiki UI
 ├── wwwroot/js/              # Animacje i efekty scrolla
+├── wwwroot/lib/three/        # Lokalna biblioteka Three.js
 ├── Program.cs               # Konfiguracja aplikacji
 └── BarberBooking.csproj     # Projekt .NET
 ```

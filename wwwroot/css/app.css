@@ -172,6 +172,26 @@ textarea {
     transition: transform 120ms linear;
 }
 
+.hero-3d-scene {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 480ms ease;
+}
+
+.hero-3d-scene.is-ready {
+    opacity: 0.92;
+}
+
+.hero-3d-scene canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .hero::after {
     position: absolute;
     right: 0;
@@ -181,11 +201,17 @@ textarea {
     background: linear-gradient(90deg, transparent, rgba(255, 248, 238, 0.08));
     content: "";
     pointer-events: none;
+    z-index: 1;
 }
 
 .hero > * {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+}
+
+.hero > .hero-3d-scene {
+    position: absolute;
+    z-index: 0;
 }
 
 .hero h1,
@@ -947,6 +973,10 @@ label span,
         min-height: auto;
     }
 
+    .hero-3d-scene.is-ready {
+        opacity: 0.64;
+    }
+
     .hero-stats,
     .service-grid,
     .barber-grid {
@@ -1032,6 +1062,10 @@ label span,
         display: none;
     }
 
+    .hero-3d-scene.is-ready {
+        opacity: 0.42;
+    }
+
     .page-header h1,
     .section-heading h2 {
         font-size: 2.35rem;
@@ -1090,5 +1124,9 @@ label span,
     .motion-board,
     .hero-panel {
         transform: none !important;
+    }
+
+    .hero-3d-scene {
+        display: none;
     }
 }
